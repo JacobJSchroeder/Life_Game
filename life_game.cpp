@@ -8,7 +8,9 @@ using namespace std;
 //array of all cells
 vector<vector<string> > cells;
 //array of all living cells
-vector<vector<int> > living_cells; 
+vector<vector<int> > living_cells;
+//gameboard array
+vector<vector<string> > game_board; 
 //counter of all living cells;
 int living_cells_num = 0;
 //array for users choice of starting live cells
@@ -64,7 +66,7 @@ int creation(){
 					//setting x value for live cell
 					bool choice_x_range = true;
 					while (choice_x_range == true){
-						cout << "Which collumn (1-20)?" << endl;
+						cout << "Which row (1-20)?" << endl;
 						cin >> choice_x;
 
 						if(choice_x >= 1 and choice_x <= 20){
@@ -78,7 +80,7 @@ int creation(){
 					//setting y value for live cell
 					bool choice_y_range = true;
 					while (choice_y_range == true){
-						cout << "Which row (1-20)?" << endl;
+						cout << "Which collumn (1-20)?" << endl;
 						cin >> choice_y;
 
 						if(choice_y >= 1 and choice_y <= 20){
@@ -133,60 +135,103 @@ int creation(){
 					cells[i][j] = live_cell;
 				}
 			}
-			cout << cells[i][j] << " "; 
 		}
-		cout << " " << endl;
 	}
 }
 
 //printing the gameboard
-int print_board(){
-	for (int i = 0; i < 20; i++){
-		for (int j = 0; j < 20; j++){
-			cout << cells[i][j] << " ";
+int form_game_board(){
+	game_board.resize(22);
+	for (int i = 0; i < 22; i++){
+		game_board[i].resize(22);
+		for (int j = 0; j < 22; j++){
+			if (i == 0 or i == 21){
+				game_board[i][j] = "─";
+			}
+			else if (j == 0 or j == 21){
+				game_board[i][j] = "|";
+			}
+			else if (i >= 1 and i <= 20 and j >= 1 and j <= 20) {
+				game_board[i][j] = cells[i-1][j-1];
+			} 
 		}
-		cout << " " << endl;
 	}	
 }
 
-//finding which cells are living
-int find_life(){
-	for (int i = 0; i < 20; i++){
-		for (int j = 0; j < 20; j++){
-			if (cells[i][j] == live_cell){
-				living_cells_num += 1;
-				living_cells.resize(living_cells_num);
-				for (int k = living_cells_num-1; k < living_cells_num; k++){
-					living_cells[k].resize(1);
-					living_cells[k][0] = i;
-					living_cells[k][1] = j;
-					//debug
-					cout << living_cells[k][0] << " " << living_cells[k][1] << endl;
+int print_game_board(){
+	for (int i = 0; i < 22; i++){
+		for (int j = 0; j< 22; j++){
+			cout << game_board[i][j] << " ";
+		}
+		cout << endl;
+	}
+}
+
+int day(){
+	for (int i = 0; i < 22; i++){
+		for (int j = 0; i < 22; j++){
+			int surrounding_cells = 0;
+			//checking surrounds for each cell on the board
+			if (i >= 1 and i <= 21 and j >= 1 and j <= 21){
+				//top left corner
+				if (game_board[i-1][j-1] == live_cell){
+					surrounding_cells += 1;
+				}
+				//top
+				if (game_board[i-1][j] == live_cell){
+					surrounding_cells += 1;
+				}
+				//top right corner
+				if (game_board[i-1][j+1] == live_cell){
+					surrounding_cells += 1;
+				}
+				//left side
+				if (game_board[i][j-1] == live_cell){
+					surrounding_cells += 1;
+				}
+				//right side
+				if (game_board[i][j+1] == live_cell){
+					surrounding_cells += 1;
+				}
+				//bottom left
+				if (game_board[i+1][j-1] == live_cell){
+					surrounding_cells += 1;
+					cout << "anal";
+				}
+				//bottom
+				if (game_board[i+1][j] == live_cell){
+					surrounding_cells += 1;
+				}
+				//bottom right
+				if (game_board[i+1][j+1] == live_cell){
+					surrounding_cells += 1;
+				}
+
+				//using surrounding cells to dictate what happens based on the rules:
+
+				//if cell is alive and its neibours are less than 2 or greater than 1 it dies
+				if ((game_board[i][j] == live_cell and surrounding_cells < 2) or (game_board[i][j] == live_cell and surrounding_cells >= 3)){
+					cells[i-1][j-1] = no_cell;
+					//add in vector array addition of coordinantes of new dead cells
+				}
+
+				//if a cell is null and its neibours equal 3 it is born
+				if (game_board[i][j] == no_cell and surrounding_cells == 3){
+					cells[i-1][j-1] = live_cell;
+					//add in vector array addition or coordinates of new live cells
 				}
 			}
 		}
-	}	
+	}
 }
 
-//finding which cells live or die
-int day(){
-	// finding surrounding cells
-	for (int i = 0; i < 20; i++){
-		for (int j = 0; j < 20; j++){
-			//accounting for the non existant coordinantes
-			if (!cells[i-1][j-1]){
-				cout << "anal";
-			}
-		}
-	}	
-}
 
 int main() 
 { 
 	//welcoming user
 	cout << "\033[1;32mWelcome to the Game of Life!\033[0m" << endl;
 	creation();
-	find_life();
-	day();
+	form_game_board();
+	print_game_board();
     return 0; 
 } 
