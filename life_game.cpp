@@ -169,10 +169,10 @@ int print_game_board(){
 
 int day(){
 	for (int i = 0; i < 22; i++){
-		for (int j = 0; i < 22; j++){
+		for (int j = 0; j < 22; j++){
 			int surrounding_cells = 0;
 			//checking surrounds for each cell on the board
-			if (i >= 1 and i <= 21 and j >= 1 and j <= 21){
+			if (i >= 1 and i <= 20 and j >= 1 and j <= 20){
 				//top left corner
 				if (game_board[i-1][j-1] == live_cell){
 					surrounding_cells += 1;
@@ -196,7 +196,6 @@ int day(){
 				//bottom left
 				if (game_board[i+1][j-1] == live_cell){
 					surrounding_cells += 1;
-					cout << "anal";
 				}
 				//bottom
 				if (game_board[i+1][j] == live_cell){
@@ -216,7 +215,7 @@ int day(){
 				}
 
 				//if a cell is null and its neibours equal 3 it is born
-				if (game_board[i][j] == no_cell and surrounding_cells == 3){
+				else if (game_board[i][j] == no_cell and surrounding_cells == 3){
 					cells[i-1][j-1] = live_cell;
 					//add in vector array addition or coordinates of new live cells
 				}
@@ -230,7 +229,15 @@ int main()
 { 
 	//welcoming user
 	cout << "\033[1;32mWelcome to the Game of Life!\033[0m" << endl;
+	
+	//creating the base gameboard
 	creation();
+	form_game_board();
+	print_game_board();
+
+
+	//updating board
+	day();
 	form_game_board();
 	print_game_board();
     return 0; 
