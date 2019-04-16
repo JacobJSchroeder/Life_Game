@@ -213,7 +213,7 @@ int day(){
 				//using surrounding cells to dictate what happens based on the rules:
 
 				//if cell is alive and its neibours are less than 2 or greater than 1 it dies
-				if ((game_board[i][j] == live_cell and surrounding_cells < 2) or (game_board[i][j] == live_cell and surrounding_cells >= 3)){
+				if ((game_board[i][j] == live_cell and surrounding_cells < 2) or (game_board[i][j] == live_cell and surrounding_cells > 3)){
 					cells[i-1][j-1] = no_cell;
 					//add in vector array addition of coordinantes of new dead cells
 				}
@@ -302,7 +302,7 @@ int main()
 				cont_game = false;
 			}
 			else{
-				cout << "I do not understand that input please try again";
+				cout << "I do not understand that input please try again" << endl;
 			}
 		}
 
