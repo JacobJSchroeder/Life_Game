@@ -20,6 +20,9 @@ vector<vector<int> > start_cells;
 string live_cell = "\033[1;31mX\033[0m";
 string no_cell = "\033[1;34mO\033[0m";
 
+//bool seeing if live cells exist or not
+bool life_exists = false;
+
 //function for creating the game board and allowing user to choose where the start cells will be
 int creation(){
 	//loctaions of the cells
@@ -116,6 +119,7 @@ int creation(){
 
 			started = false;
 		}
+		
 		//ensuring value is in the appropriate range
 		else{
 			cout << "Please enter a number between 1 and 400" << endl;
@@ -224,21 +228,107 @@ int day(){
 	}
 }
 
+//checking to see if cells still exist on the board
+int find_life(){
+	life_exists = false;
+	for (int i = 0; i < 20; i++){
+		for (int j = 0; j< 20; j++){
+			if (cells[i][j] == live_cell){
+				life_exists = true;
+			}
+		}
+	}
+}
 
 int main() 
 { 
-	//welcoming user
 	cout << "\033[1;32mWelcome to the Game of Life!\033[0m" << endl;
+	bool game_playing = true;
+	bool cont_game = true;
+	int days_played = 0;
+	string Y_or_N;
+	while (game_playing == true){
+		
+		//welcoming user
+		cout << "Begin by setting which cells you would like alive on the first day" << endl;
+		
+		//creating the base gameboard
+		creation();
+		form_game_board();
+		print_game_board();
+
+		while (cont_game == true){
+			
+			//checking for living cells
+			life_exists = false;
+			for (int i = 0; i < 22; i++){
+				for (int j = 0; j< 22; j++){
+					if (game_board[i][j] == live_cell){
+						life_exists = true;
+					}
+				}
+			}
+
+			//checking if life still exists on the board
+			if (life_exists == false){
+				cout << "You have no living cells left " << "[Days survived " << days_played  << "]" << endl;
+				cont_game = false;
+				break;
+			}
+
+			//user inputs to go to the next cell day
+			if (days_played == 0){
+				cout << "Press Y then enter to begin the game of life or N then enter to exit" << endl;
+				cin >> Y_or_N;
+			}
+			else if (days_played > 0){
+				cout << "End of day number " << days_played << endl;
+				cout << "Press Y then enter to continue or N then enter to exit" << endl;
+				cin >> Y_or_N;
+			}
+
+			//getting inputs
+			if (Y_or_N == "Y" or Y_or_N == "y"){
+
+				//updating amount of days cell board has survived for
+				days_played += 1;
+				
+				//updating board
+				day();
+				form_game_board();
+				print_game_board();
+			}
+			else if (Y_or_N == "N" or Y_or_N == "n"){
+				cont_game = false;
+			}
+			else{
+				cout << "I do not understand that input please try again";
+			}
+		}
+
+		//seeing if player wants to try again after they have quit out
+		cout << "Would you like to play another game? (Y for yes N for no)" << endl;
+		bool play_again = true;
+		while (play_again == true){
+			cin >> Y_or_N;
+			if (Y_or_N == "Y" or Y_or_N == "y"){
+				game_playing = true;
+				cont_game = true;
+				play_again = false;
+			}
+			else if (Y_or_N == "N" or Y_or_N == "n"){
+				game_playing = false;
+				play_again = false;
+			}
+			else{
+				cout << "Please input a suitable input" << endl;
+			}
+		}
+	}
 	
-	//creating the base gameboard
-	creation();
-	form_game_board();
-	print_game_board();
-
-
-	//updating board
-	day();
-	form_game_board();
-	print_game_board();
-    return 0; 
+	// Thanking user and ending the program
+	if (game_playing == false){
+		cout << "Thank you for playing the game of life" << endl;
+		return 0; 
+	}	
 } 
