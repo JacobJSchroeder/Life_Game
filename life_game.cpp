@@ -248,7 +248,7 @@ int main()
 	int days_played = 0;
 	string Y_or_N;
 	while (game_playing == true){
-		
+
 		//welcoming user
 		cout << "Begin by setting which cells you would like alive on the first day" << endl;
 		
@@ -256,6 +256,9 @@ int main()
 		creation();
 		form_game_board();
 		print_game_board();
+
+		//resetting day counter if new game is played
+		days_played = 0;
 
 		while (cont_game == true){
 			
@@ -281,13 +284,14 @@ int main()
 				cout << "Press Y then enter to begin the game of life or N then enter to exit" << endl;
 				cin >> Y_or_N;
 			}
-			else if (days_played > 0){
+			//changing the message displayed for grammar
+			else{
 				cout << "End of day number " << days_played << endl;
 				cout << "Press Y then enter to continue or N then enter to exit" << endl;
 				cin >> Y_or_N;
 			}
 
-			//getting inputs
+			//continues game
 			if (Y_or_N == "Y" or Y_or_N == "y"){
 
 				//updating amount of days cell board has survived for
@@ -298,9 +302,11 @@ int main()
 				form_game_board();
 				print_game_board();
 			}
+			//ending current game
 			else if (Y_or_N == "N" or Y_or_N == "n"){
 				cont_game = false;
 			}
+			//catching bad inputs
 			else{
 				cout << "I do not understand that input please try again" << endl;
 			}
@@ -311,15 +317,18 @@ int main()
 		bool play_again = true;
 		while (play_again == true){
 			cin >> Y_or_N;
+			//allows user to play again
 			if (Y_or_N == "Y" or Y_or_N == "y"){
 				game_playing = true;
 				cont_game = true;
 				play_again = false;
 			}
+			//allows user to quit out of the game
 			else if (Y_or_N == "N" or Y_or_N == "n"){
 				game_playing = false;
 				play_again = false;
 			}
+			//catching bad inputs
 			else{
 				cout << "Please input a suitable input" << endl;
 			}
